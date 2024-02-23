@@ -10,9 +10,10 @@ public class AudioManager : MonoBehaviour
     int currentMusicIndex = -1;
     AudioSource audioSource;
 
-    public AudioMixerGroup soundMixerGroup;
+    public Queue<AudioSource> soundsGo = new Queue<AudioSource>();
 
     public AudioMixer audioMixer;
+    public AudioMixerGroup soundMixerGroup;
 
     public static AudioManager instance;
 
@@ -20,6 +21,14 @@ public class AudioManager : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         instance = this;
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            soundsGo.Enqueue(CreateSoundsGO());
+        }
     }
 
     private void Update()
@@ -34,12 +43,30 @@ public class AudioManager : MonoBehaviour
 
     public void PlayClipAt(float spatialBlend, Vector2 pos, AudioClip clip)
     {
-        AudioSource tmpAudioClip = new GameObject("tmp Audio Go").AddComponent<AudioSource>();
-        tmpAudioClip.transform.position = pos;
-        tmpAudioClip.spatialBlend = spatialBlend;
-        tmpAudioClip.outputAudioMixerGroup = soundMixerGroup;
-        tmpAudioClip.clip = clip;
-        tmpAudioClip.Play();
-        Destroy(tmpAudioClip.gameObject, clip.length + .01f);
+        AudioSource tmpAudioSource;
+        if (soundsGo.Count <= 0) tmpAudioSource = CreateSoundsGO();
+        else tmpAudioSource = soundsGo.Dequeue();
+
+        tmpAudioSource.transform.position = pos;
+        tmpAudioSource.spatialBlend = spatialBlend;
+        tmpAudioSource.clip = clip;
+        tmpAudioSource.Play();
+        StartCoroutine(AddAudioSourceToQueue(tmpAudioSource));
+    }
+    IEnumerator AddAudioSourceToQueue(AudioSource current)
+    {
+        yield return new WaitForSeconds(current.clip.length);
+        soundsGo.Enqueue(current);
+    }
+
+    AudioSource CreateSoundsGO()
+    {
+        print("add");
+        AudioSource tmpAudioSource = new GameObject("Audio Go").AddComponent<AudioSource>();
+        tmpAudioSource.transform.SetParent(transform);
+        tmpAudioSource.outputAudioMixerGroup = soundMixerGroup;
+        soundsGo.Enqueue(tmpAudioSource);
+
+        return tmpAudioSource;
     }
 }
