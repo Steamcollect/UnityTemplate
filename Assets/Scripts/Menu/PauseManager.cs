@@ -8,6 +8,13 @@ public class PauseManager : MonoBehaviour
     public Animator settingsAnimator;
     bool isSettingsOpen;
 
+    GameStateManager gameStateManager;
+
+    private void Awake()
+    {
+        gameStateManager = FindFirstObjectByType<GameStateManager>();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) PauseButton();
@@ -17,10 +24,18 @@ public class PauseManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
-
     public void PauseButton()
     {
-        isSettingsOpen = !isSettingsOpen;
+        if (isSettingsOpen)
+        {
+            gameStateManager.ResumeGameState();
+            isSettingsOpen = false;
+        }
+        else
+        {
+            gameStateManager.PauseGameState();
+            isSettingsOpen = true;
+        }
         settingsAnimator.SetBool("IsOpen", isSettingsOpen);
     }
 }

@@ -12,8 +12,8 @@ public class InteractiveButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (selectSounds.Length > 0) AudioManager.instance.PlayClipAt(0, Vector2.zero, selectSounds[Random.Range(0, selectSounds.Length)]);
         transform.DOScale(finalScale, moveTime);
+        if (selectSounds.Length > 0) AudioManager.instance.PlayClipAt(0, Vector2.zero, selectSounds[Random.Range(0, selectSounds.Length)]);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
