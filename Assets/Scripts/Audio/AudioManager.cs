@@ -41,7 +41,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayClipAt(float spatialBlend, Vector2 pos, AudioClip clip)
+    public void PlayClipAt(AudioClip clip, float spatialBlend, Vector3 pos = Vector3.zero)
     {
         AudioSource tmpAudioSource;
         if (soundsGo.Count <= 0) tmpAudioSource = CreateSoundsGO();
@@ -61,7 +61,6 @@ public class AudioManager : MonoBehaviour
 
     AudioSource CreateSoundsGO()
     {
-        print("add");
         AudioSource tmpAudioSource = new GameObject("Audio Go").AddComponent<AudioSource>();
         tmpAudioSource.transform.SetParent(transform);
         tmpAudioSource.outputAudioMixerGroup = soundMixerGroup;
