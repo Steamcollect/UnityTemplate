@@ -25,10 +25,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < 30; i++)
-        {
-            soundsGo.Enqueue(CreateSoundsGO());
-        }
+        for (int i = 0; i < 30; i++) soundsGo.Enqueue(CreateSoundsGO());
     }
 
     private void Update()
@@ -44,8 +41,8 @@ public class AudioManager : MonoBehaviour
     public void PlayClipAt(float spatialBlend, Vector3 pos, AudioClip clip)
     {
         AudioSource tmpAudioSource;
-        if (soundsGo.Count <= 0) tmpAudioSource = CreateSoundsGO();
-        else tmpAudioSource = soundsGo.Dequeue();
+        if (soundsGo.Count <= 0) soundsGo.Enqueue(CreateSoundsGO());
+        tmpAudioSource = soundsGo.Dequeue();
 
         tmpAudioSource.transform.position = pos;
         tmpAudioSource.spatialBlend = spatialBlend;
@@ -64,7 +61,6 @@ public class AudioManager : MonoBehaviour
         AudioSource tmpAudioSource = new GameObject("Audio Go").AddComponent<AudioSource>();
         tmpAudioSource.transform.SetParent(transform);
         tmpAudioSource.outputAudioMixerGroup = soundMixerGroup;
-        soundsGo.Enqueue(tmpAudioSource);
 
         return tmpAudioSource;
     }
