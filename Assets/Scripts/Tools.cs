@@ -1,7 +1,8 @@
-using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using DG.Tweening;
 
 public static class Tools
 {
@@ -24,6 +25,7 @@ public static class Tools
         });
     }
 
+    // Get random function
     public static T GetRandom<T>(this List<T> list)
     {
         return list[Random.Range(0, list.Count)];
